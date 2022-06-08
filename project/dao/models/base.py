@@ -1,5 +1,5 @@
-from project.setup_db import db
+from sqlalchemy import Column, Integer
 
 
 class BaseMixin(object):
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
