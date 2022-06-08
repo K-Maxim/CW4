@@ -25,6 +25,7 @@ class TestingConfig(BaseConfig):
 
 
 class DevelopmentConfig(BaseConfig):
+    JSON_AS_ASCII = False
     DEBUG = True
     SQLALCHEMY_ECHO = True
     SQLALCHEMY_DATABASE_URI = "sqlite:///" + os.path.join(
