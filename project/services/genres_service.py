@@ -1,6 +1,7 @@
-from project.dao import GenreDAO
+from project.dao.genre import GenreDAO
 from project.exceptions import ItemNotFound
 from project.schemas.genre import GenreSchema
+
 from project.services.base import BaseService
 
 
