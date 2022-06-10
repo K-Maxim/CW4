@@ -13,23 +13,19 @@ users_ns = Namespace("users")
 @users_ns.route("/")
 class UsersView(Resource):
 
-    @users_ns.response(200, "OK")
     def get(self):
-        """Get all users"""
-        return UsersService(db.session).get_all_users()
+        users = UsersService(db.session).get_all_users()
+        return users
 
 
-@users_ns.route("/<int:user_id>")
+@users_ns.route("/<int:user_id>/")
 class UserView(Resource):
 
-    @users_ns.response(200, "OK")
-    @users_ns.response(404, "User не найден")
     def get(self, user_id: int):
-        """Get user by id"""
         try:
             return UsersService(db.session).get_item_by_id(user_id)
         except ItemNotFound:
-            abort(404, message="User `не найден`")
+            abort(404)
 
     def patch(self, user_id: int):
         req_json = request.json
@@ -43,19 +39,17 @@ class UserView(Resource):
             abort(404)
 
 
-@users_ns.route("/password/<int:user_id>")
+@users_ns.route("/password/<int:user_id>/")
 class UserPatchView(Resource):
 
-    @users_ns.response(200, "OK")
-    @users_ns.response(404, "User не найден")
     def put(self, user_id: int):
         req_json = request.json
-        password_1 = req_json.get("password_1", None)
-        password_2 = req_json.get("password_2", None)
-        if None in [password_1, password_2]:
+        old_password = req_json.get("old_password", None)
+        new_password = req_json.get("new_password", None)
+
+        if None in [old_password, new_password]:
             abort(400)
-        if not password_1 or not password_2:
-            abort(400)
+
         if not req_json.get("id"):
             req_json['id'] = user_id
         try:
