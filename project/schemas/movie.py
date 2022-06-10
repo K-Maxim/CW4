@@ -1,5 +1,8 @@
 from marshmallow import fields, Schema
 
+from project.schemas.director import DirectorSchema
+from project.schemas.genre import GenreSchema
+
 
 class MovieSchema(Schema):
     id = fields.Int(required=True)
@@ -8,6 +11,6 @@ class MovieSchema(Schema):
     trailer = fields.Str()
     year = fields.Int()
     rating = fields.Int()
-    genre_id = fields.Int()
-    director_id = fields.Int()
+    genre = fields.Nested(GenreSchema)
+    director = fields.Nested(DirectorSchema)
 
