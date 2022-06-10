@@ -1,9 +1,8 @@
-from project.dao.models.base import BaseMixin
 from project.setup_db import db
 from sqlalchemy import Column, String, Integer
 
 
-class User(BaseMixin, db.Model):
+class User(db.Model):
     __tablename__ = "user"
 
     id = Column(Integer, primary_key=True)
@@ -14,4 +13,4 @@ class User(BaseMixin, db.Model):
     favorite_genre = Column(String(100))
 
     def __repr__(self):
-        return f"<Movie '{self.name.title()}'>"
+        return f"<User '{self.email}'>"
