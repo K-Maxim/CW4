@@ -7,14 +7,14 @@ class UserDAO:
     def __init__(self, session: scoped_session):
         self._db_session = session
 
+    def get_all(self):
+        return self._db_session.query(User).all()
+
     def get_by_id(self, pk):
         return self._db_session.query(User).filter(User.id == pk).one_or_none()
 
     def get_by_email(self, email):
         return self._db_session.query(User).filter(User.email == email).one_or_none()
-
-    def get_all(self):
-        return self._db_session.query(User).all()
 
     def create(self, user_d):
         ent = User(**user_d)
@@ -22,9 +22,8 @@ class UserDAO:
         self._db_session.commit()
         return ent
 
-
     def update(self, new_pd):
-        user = self.get_by_id(new_pd.get('id'))
+        user = self.get_by_id(new_pd.get('email'))
         if user:
             if new_pd.get('password'):
                 user.password = new_pd.get('password')
