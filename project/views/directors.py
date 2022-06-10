@@ -15,10 +15,10 @@ class DirectorView(Resource):
         return DirectorService(db.session).get_all_directors()
 
 
-@directors_ns.route("/<int:director_id>")
+@directors_ns.route("/<int:director_id>/")
 class DirectorView(Resource):
     @directors_ns.response(200, "OK")
-    @directors_ns.response(404, "Genre not found")
+    @directors_ns.response(404, "Director not found")
     def get(self, director_id: int):
         """Get director by id"""
         try:
