@@ -8,21 +8,36 @@ class UserDAO:
         self._db_session = session
 
     def get_all(self):
+        """
+        Получаем всех пользователей
+        """
         return self._db_session.query(User).all()
 
     def get_by_id(self, pk):
+        """
+        Получаем пользователя по его id
+        """
         return self._db_session.query(User).filter(User.id == pk).one_or_none()
 
     def get_by_email(self, email):
+        """
+        Получаем пользователя по его email
+        """
         return self._db_session.query(User).filter(User.email == email).one_or_none()
 
     def create(self, user_d):
+        """
+        Создаем пользователя и добавляем в БД
+        """
         ent = User(**user_d)
         self._db_session.add(ent)
         self._db_session.commit()
         return ent
 
     def update(self, new_pd):
+        """
+        Обновляем пользователя и добавляем в БД
+        """
         user = self.get_by_id(new_pd.get('id'))
         if user:
             if new_pd.get('password'):

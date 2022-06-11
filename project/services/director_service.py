@@ -6,6 +6,9 @@ from project.services.base import BaseService
 
 
 class DirectorService(BaseService):
+    """
+    Получаем режиссера по его id
+    """
     def get_item_by_id(self, pk):
         director = DirectorDAO(self._db_session).get_by_id(pk)
         if not director:
@@ -13,5 +16,8 @@ class DirectorService(BaseService):
         return DirectorSchema().dump(director)
 
     def get_all_directors(self):
+        """
+        Получаем всех режиссеров
+        """
         directors = DirectorDAO(self._db_session).get_all()
         return DirectorSchema(many=True).dump(directors)
