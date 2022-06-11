@@ -23,7 +23,7 @@ class UserDAO:
         return ent
 
     def update(self, new_pd):
-        user = self.get_by_id(new_pd.get('email'))
+        user = self.get_by_id(new_pd.get('id'))
         if user:
             if new_pd.get('password'):
                 user.password = new_pd.get('password')
