@@ -42,22 +42,23 @@ class UsersService(BaseService):
         return UserSchema().dump(user)
 
     def update_password(self, new_pd):
-        print(new_pd)
         old_password = new_pd.get("old_password")
-        print(old_password)
         new_password = new_pd.get("new_password")
 
-        user = self.get_item_by_id(new_pd.get("id"))
-        if not self.compare_passwords(old_password, new_password):
+        before_update_user = self.get_item_by_id(new_pd.get("id"))
+        if self.generate_password_digest(old_password) == before_update_user.get("password"):
+            abort(400)
+        if self.compare_passwords(before_update_user.get('password'), new_password):
             abort(400, 'Старый и новый пароль совпадают')
 
-        user_update = {
-            "email": user.get('email'),
+        user_update_date = {
+            "id": before_update_user.get("id"),
+            "email": before_update_user.get('email'),
             "password": self.generate_password_digest(new_password)
         }
-        print(user_update)
-        UserDAO(self._db_session).update(user_update)
 
+        update_user = UserDAO(self._db_session).update(user_update_date)
+        return UserSchema().dump(update_user)
 
     def generate_password_digest(self, password):
         hash_digest = hashlib.pbkdf2_hmac(
@@ -72,10 +73,10 @@ class UsersService(BaseService):
         decoded_digest = base64.b64decode(password_hash)
 
         hash_digest = hashlib.pbkdf2_hmac(
-            'sha256',
-            other_password.encode('utf-8'),
-            PWD_HASH_SALT,
-            PWD_HASH_ITERATIONS
+            hash_name='sha256',
+            password=other_password.encode('utf-8'),
+            salt=PWD_HASH_SALT,
+            iterations=PWD_HASH_ITERATIONS
         )
         return hmac.compare_digest(decoded_digest, hash_digest)
 
