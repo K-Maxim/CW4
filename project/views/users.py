@@ -3,7 +3,7 @@ from flask_restx import abort, Namespace, Resource
 
 from project.exceptions import ItemNotFound
 from project.services.user_service import UsersService
-
+from project.helpers.decorators import auth_required
 from project.setup_db import db
 
 
@@ -12,7 +12,7 @@ users_ns = Namespace("users")
 
 @users_ns.route("/")
 class UsersView(Resource):
-
+    @auth_required
     def get(self):
         users = UsersService(db.session).get_all_users()
         return users
@@ -20,13 +20,14 @@ class UsersView(Resource):
 
 @users_ns.route("/<int:user_id>/")
 class UserView(Resource):
-
+    @auth_required
     def get(self, user_id: int):
         try:
             return UsersService(db.session).get_item_by_id(user_id)
         except ItemNotFound:
             abort(404)
 
+    @auth_required
     def patch(self, user_id: int):
         req_json = request.json
         if not req_json:
@@ -41,7 +42,7 @@ class UserView(Resource):
 
 @users_ns.route("/password/<int:user_id>/")
 class UserPatchView(Resource):
-
+    @auth_required
     def put(self, user_id: int):
         req_json = request.json
         old_password = req_json.get("old_password", None)
